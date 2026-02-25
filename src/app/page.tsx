@@ -11,6 +11,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editRow, setEditRow] = useState<Transaction | null>(null);
+  const [cghsOpen, setCghsOpen] = useState(true);
 
   const fetchTransactions = useCallback(async () => {
     setLoading(true);
@@ -119,16 +120,30 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Table */}
+      {/* CGHS Section */}
       <div className="max-w-7xl mx-auto px-6 pb-10">
-        {loading ? (
-          <div className="text-center py-20 text-gray-400">Loading transactions...</div>
-        ) : (
-          <TransactionTable
-            transactions={transactions}
-            onEdit={(t) => { setEditRow(t); setShowForm(true); }}
-            onDelete={handleDelete}
-          />
+        <button
+          onClick={() => setCghsOpen(!cghsOpen)}
+          className="w-full flex items-center justify-between bg-white border rounded-lg px-4 py-3 mb-3 shadow-sm hover:bg-gray-50 transition-colors"
+        >
+          <h3 className="text-lg font-semibold text-gray-800">
+            CGHS Transactions (April 2024 – March 2025)
+            <span className="ml-2 text-sm font-normal text-gray-500">({transactions.length} records)</span>
+          </h3>
+          <span className={`text-gray-500 transition-transform ${cghsOpen ? 'rotate-180' : ''}`}>
+            &#9660;
+          </span>
+        </button>
+        {cghsOpen && (
+          loading ? (
+            <div className="text-center py-20 text-gray-400">Loading transactions...</div>
+          ) : (
+            <TransactionTable
+              transactions={transactions}
+              onEdit={(t) => { setEditRow(t); setShowForm(true); }}
+              onDelete={handleDelete}
+            />
+          )
         )}
       </div>
 
